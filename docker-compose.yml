@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  # I use this devcontainer for development from Windows, so you may not need to run it from Linux/OSX.
+  devcontainer:
+    image: mcr.microsoft.com/vscode/devcontainers/rust:latest
+    volumes:
+      - ./:/workspaces/restaurant-assignment
+    command: sleep infinity
