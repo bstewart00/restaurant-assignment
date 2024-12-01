@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use super::menu::MenuItemId;
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, serde::Deserialize)]
 pub struct TableId(pub i32);
 impl std::fmt::Display for TableId {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {

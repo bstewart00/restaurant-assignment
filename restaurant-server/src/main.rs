@@ -11,7 +11,6 @@ mod api;
 mod models;
 mod persistence;
 mod state;
-mod table_orders_service;
 
 #[cfg(test)]
 mod tests {
