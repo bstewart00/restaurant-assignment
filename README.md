@@ -27,7 +27,8 @@ Assumptions:
     - This is how I interpreted the last requirement:
     > in other words, the time does not have to be counted down in real time, only upon item creation and then removed with the item upon item deletion
     - So, the client would periodically check the status of table/items to see if they are ready.
-    - In practice, I think the server would notify clients when items have finished preparing. 
+    - In practice, I think the server would notify clients when items have finished preparing.
+- Table orders represent a transaction for one group of guests at that table. So after all items from the order are finished, the client would DELETE the table from the "active orders".
 
 ## Running the application:
 

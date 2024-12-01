@@ -4,9 +4,18 @@
 mod tests {
     use std::collections::HashMap;
 
-    use crate::{models::{menu::MenuItemId, orders::{TableId, TableOrder, TableOrderItem}}, persistence::{memory_persistence::{get_underlying_data, item_slice_to_hashmap, MemoryPersistence}, persistence::{CreateOrderError, Persistence, ReadOrderError, ReadOrderItemError}}};
+    use crate::{
+        models::{
+            menu::MenuItemId,
+            orders::{TableId, TableOrder, TableOrderItem},
+        },
+        persistence::{
+            memory_persistence::{get_underlying_data, item_slice_to_hashmap, MemoryPersistence},
+            persistence::{CreateOrderError, Persistence, ReadOrderError, ReadOrderItemError},
+        },
+    };
 
-    #[tokio::test] 
+    #[tokio::test]
     async fn create_order__no_existing_order__is_created() {
         let table_id = TableId(123);
         let items = vec![
@@ -28,7 +37,7 @@ mod tests {
         assert_eq!(1, get_underlying_data(sut).len());
     }
 
-    #[tokio::test] 
+    #[tokio::test]
     async fn create_order__table_has_existing_order__is_error() {
         let table_id = TableId(123);
         let items = vec![
@@ -37,10 +46,7 @@ mod tests {
             TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
         ];
         let mut data: HashMap<TableId, TableOrder> = HashMap::new();
-        data.insert(table_id.clone(), TableOrder {
-            table_id: table_id.clone(),
-            items: HashMap::default(),
-        });
+        data.insert(table_id.clone(), TableOrder { table_id: table_id.clone(), items: HashMap::default() });
         let mut sut = MemoryPersistence::new(data);
 
         let result = sut.create_order(&table_id, &items).await;
@@ -50,7 +56,7 @@ mod tests {
         assert_eq!(1, get_underlying_data(sut).len());
     }
 
-    #[tokio::test] 
+    #[tokio::test]
     async fn update_order__no_existing_order__is_error() {
         let table_id = TableId(123);
         let items = vec![
@@ -67,7 +73,7 @@ mod tests {
         assert_eq!(0, get_underlying_data(sut).len());
     }
 
-    #[tokio::test] 
+    #[tokio::test]
     async fn update_order__existing_order__replaces_items() {
         let table_id = TableId(123);
         let existing_items = vec![
@@ -76,10 +82,7 @@ mod tests {
             TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
         ];
         let mut data: HashMap<TableId, TableOrder> = HashMap::new();
-        data.insert(table_id.clone(), TableOrder {
-            table_id: table_id.clone(),
-            items: item_slice_to_hashmap(&existing_items)
-        });
+        data.insert(table_id.clone(), TableOrder { table_id: table_id.clone(), items: item_slice_to_hashmap(&existing_items) });
 
         let mut sut = MemoryPersistence::new(data);
 
@@ -104,7 +107,7 @@ mod tests {
         assert_eq!(1, get_underlying_data(sut).len());
     }
 
-    #[tokio::test] 
+    #[tokio::test]
     async fn find_order__unknown_id__is_error() {
         let table_id = TableId(123);
         let sut = MemoryPersistence::default();
@@ -115,15 +118,12 @@ mod tests {
         assert_eq!(ReadOrderError::OrderNotFound(table_id.to_string()), result.unwrap_err());
     }
 
-    #[tokio::test] 
+    #[tokio::test]
     async fn find_order__id_exists__returns_order() {
         let table_id = TableId(123);
         let mut data: HashMap<TableId, TableOrder> = HashMap::new();
 
-        let expected_order = TableOrder {
-            table_id: table_id.clone(),
-            items: HashMap::default(),
-        }; 
+        let expected_order = TableOrder { table_id: table_id.clone(), items: HashMap::default() };
         data.insert(table_id.clone(), expected_order.clone());
 
         let sut = MemoryPersistence::new(data);
@@ -134,7 +134,7 @@ mod tests {
         assert_eq!(expected_order, *result.unwrap());
     }
 
-    #[tokio::test] 
+    #[tokio::test]
     async fn delete_order__order_does_not_exist__is_error() {
         let mut sut = MemoryPersistence::default();
 
@@ -145,14 +145,11 @@ mod tests {
         assert_eq!(ReadOrderError::OrderNotFound(table_id.to_string()), result.unwrap_err());
     }
 
-    #[tokio::test] 
+    #[tokio::test]
     async fn delete_order__order_exists__is_deleted() {
         let table_id = TableId(123);
         let mut data: HashMap<TableId, TableOrder> = HashMap::new();
-        data.insert(table_id.clone(), TableOrder {
-            table_id: table_id.clone(),
-            items: HashMap::default(),
-        });
+        data.insert(table_id.clone(), TableOrder { table_id: table_id.clone(), items: HashMap::default() });
         let mut sut = MemoryPersistence::new(data);
 
         let table_id = TableId(123);
@@ -162,7 +159,7 @@ mod tests {
         assert_eq!(0, get_underlying_data(sut).len());
     }
 
-    #[tokio::test] 
+    #[tokio::test]
     async fn delete_order_item__order_does_not_exist__is_error() {
         let mut sut = MemoryPersistence::default();
 
@@ -174,7 +171,7 @@ mod tests {
         assert_eq!(ReadOrderItemError::OrderNotFound(table_id.to_string()), result.unwrap_err());
     }
 
-    #[tokio::test] 
+    #[tokio::test]
     async fn delete_order_item__order_item_does_not_exist__is_error() {
         let table_id = TableId(123);
         let mut data: HashMap<TableId, TableOrder> = HashMap::new();
@@ -183,10 +180,7 @@ mod tests {
             TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
             TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
         ];
-        data.insert(table_id.clone(), TableOrder {
-            table_id: table_id.clone(),
-            items: item_slice_to_hashmap(&existing_items)
-        });
+        data.insert(table_id.clone(), TableOrder { table_id: table_id.clone(), items: item_slice_to_hashmap(&existing_items) });
         let mut sut = MemoryPersistence::new(data);
 
         let item_id = MenuItemId(9999);
@@ -197,7 +191,7 @@ mod tests {
         assert_eq!(3, get_underlying_data(sut).get(&table_id).unwrap().items.len());
     }
 
-    #[tokio::test] 
+    #[tokio::test]
     async fn delete_order_item__order_and_item_exists__is_deleted() {
         let table_id = TableId(123);
         let mut data: HashMap<TableId, TableOrder> = HashMap::new();
@@ -206,10 +200,7 @@ mod tests {
             TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
             TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
         ];
-        data.insert(table_id.clone(), TableOrder {
-            table_id: table_id.clone(),
-            items: item_slice_to_hashmap(&existing_items)
-        });
+        data.insert(table_id.clone(), TableOrder { table_id: table_id.clone(), items: item_slice_to_hashmap(&existing_items) });
         let mut sut = MemoryPersistence::new(data);
 
         let item_id = MenuItemId(2);
@@ -217,14 +208,16 @@ mod tests {
 
         assert!(result.is_ok());
 
-        let mut order_item_ids = result.unwrap().items.iter()
-            .map(|kv| kv.1.item_id.clone())
-            .collect::<Vec<MenuItemId>>();
+        let mut order_item_ids = result.unwrap().items.iter().map(|kv| kv.1.item_id.clone()).collect::<Vec<MenuItemId>>();
         order_item_ids.sort();
 
         assert_eq!(vec![MenuItemId(1), MenuItemId(3)], order_item_ids);
 
-        let mut underlying_item_ids = get_underlying_data(sut).get(&table_id).unwrap().items.iter()
+        let mut underlying_item_ids = get_underlying_data(sut)
+            .get(&table_id)
+            .unwrap()
+            .items
+            .iter()
             .map(|kv| kv.1.item_id.clone())
             .collect::<Vec<MenuItemId>>();
         underlying_item_ids.sort();

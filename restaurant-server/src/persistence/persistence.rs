@@ -1,4 +1,7 @@
-use crate::models::{menu::MenuItemId, orders::{TableId, TableOrder, TableOrderItem}};
+use crate::models::{
+    menu::MenuItemId,
+    orders::{TableId, TableOrder, TableOrderItem},
+};
 use thiserror::Error;
 
 #[derive(Error, Debug, PartialEq)]
