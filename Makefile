@@ -1,6 +1,7 @@
 .PHONY: toolchain
 toolchain:
 	rustup default stable
+	rustup component add rustfmt
 
 .PHONY: build
 build:
