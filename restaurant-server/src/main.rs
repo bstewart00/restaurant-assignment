@@ -1,10 +1,11 @@
 use std::{
-    collections::HashMap,
-    sync::{Arc, RwLock},
+    collections::HashMap, sync::Arc,
 };
 
 use axum::Router;
+use persistence::{memory_persistence::MemoryPersistence, persistence::Persistence};
 use state::{AppState, SharedAppState};
+use tokio::sync::RwLock;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 mod api;
@@ -24,8 +25,8 @@ async fn main() {
         .with(tracing_subscriber::fmt::layer())
         .init();
 
-    let mut app_state = AppState { db: HashMap::new() };
-    app_state.db.insert("foo".to_string(), "bar".to_string());
+    let persistence: MemoryPersistence = MemoryPersistence::default();
+    let mut app_state = AppState { persistence: persistence };
     let shared_app_state = Arc::new(RwLock::new(app_state));
 
     let app = Router::<SharedAppState>::new()

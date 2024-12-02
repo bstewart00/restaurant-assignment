@@ -223,4 +223,84 @@ mod tests {
         underlying_item_ids.sort();
         assert_eq!(vec![MenuItemId(1), MenuItemId(3)], underlying_item_ids);
     }
+
+    #[tokio::test]
+    async fn general_persistence_behavior() {
+        let table_id = TableId(123);
+        let items = vec![
+            TableOrderItem { item_id: MenuItemId(1), name: "item1".to_string(), quantity: 1, total_preparation_time_mins: 10 },
+            TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
+            TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
+        ];
+        let mut sut = MemoryPersistence::default();
+
+        // No orders initially
+        assert!(sut.find_order(&table_id).await.is_err());
+
+        // Can add order
+        let added_order;
+        {
+            let result = sut.create_order(&table_id, &items).await;
+            assert!(result.is_ok());
+            added_order = result.unwrap().clone();
+
+            let mut added_order_item_ids = added_order.items.values().into_iter().map(|i| i.item_id.clone()).collect::<Vec<MenuItemId>>();
+            added_order_item_ids.sort();
+            assert_eq!(TableId(123), added_order.table_id);
+            assert_eq!(vec![MenuItemId(1), MenuItemId(2), MenuItemId(3)], added_order_item_ids);
+        }
+
+        // Can find the order after creation
+        {
+            let found_order = sut.find_order(&table_id).await;
+            assert!(found_order.is_ok());
+            let found_order = found_order.unwrap();
+            let mut found_order_item_ids = found_order.items.values().into_iter().map(|i| i.item_id.clone()).collect::<Vec<MenuItemId>>();
+            found_order_item_ids.sort();
+            assert_eq!(TableId(123), found_order.table_id);
+            assert_eq!(vec![MenuItemId(1), MenuItemId(2), MenuItemId(3)], found_order_item_ids);
+        }
+
+        // Can update the order with deleted and new items
+        let updated_order;
+        {
+            let new_items = vec![
+                TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
+                TableOrderItem { item_id: MenuItemId(4), name: "item4".to_string(), quantity: 1, total_preparation_time_mins: 14 },
+            ];
+
+            let result = sut.update_order(&table_id, &new_items).await;
+            assert!(result.is_ok());
+            updated_order = result.unwrap().clone();
+
+            let mut updated_order_item_ids = updated_order.items.values().into_iter().map(|i| i.item_id.clone()).collect::<Vec<MenuItemId>>();
+            updated_order_item_ids.sort();
+            assert_eq!(TableId(123), updated_order.table_id);
+            assert_eq!(vec![MenuItemId(2), MenuItemId(4)], updated_order_item_ids);
+        }
+
+        // Can delete a single item
+        {
+            let result = sut.delete_order_item(&table_id, &MenuItemId(2)).await;
+            assert!(result.is_ok());
+
+            let order_after_deletion = result.unwrap();
+            let mut order_after_deletion_item_ids = order_after_deletion.items.values().into_iter().map(|i| i.item_id.clone()).collect::<Vec<MenuItemId>>();
+            order_after_deletion_item_ids.sort();
+            assert_eq!(TableId(123), order_after_deletion.table_id);
+            assert_eq!(vec![MenuItemId(4)], order_after_deletion_item_ids);
+        }
+
+        // Can delete the order
+        {
+            let result = sut.delete_order(&table_id).await;
+            assert!(result.is_ok());
+        }
+
+        // Can no longer find the order
+        {
+            let result = sut.find_order(&table_id).await;
+            assert!(result.is_err());
+        }
+    }
 }
