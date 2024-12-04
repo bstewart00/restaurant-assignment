@@ -10,5 +10,5 @@ pub type SharedAppState = Arc<RwLock<AppState>>;
 
 // For simplicitly i'm not going to try and unravel async traits and Box<dyn Persistence>
 pub struct AppState {
-    pub persistence: MemoryPersistence
+    pub persistence: MemoryPersistence,
 }

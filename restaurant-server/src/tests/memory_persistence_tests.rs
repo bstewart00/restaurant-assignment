@@ -264,10 +264,8 @@ mod tests {
         // Can update the order with deleted and new items
         let updated_order;
         {
-            let new_items = vec![
-                TableOrderItem { item_id: MenuItemId(2), quantity: 1, total_preparation_time_mins: 11 },
-                TableOrderItem { item_id: MenuItemId(4), quantity: 1, total_preparation_time_mins: 14 },
-            ];
+            let new_items =
+                vec![TableOrderItem { item_id: MenuItemId(2), quantity: 1, total_preparation_time_mins: 11 }, TableOrderItem { item_id: MenuItemId(4), quantity: 1, total_preparation_time_mins: 14 }];
 
             let result = sut.update_order(&table_id, &new_items).await;
             assert!(result.is_ok());
@@ -285,7 +283,12 @@ mod tests {
             assert!(result.is_ok());
 
             let order_after_deletion = result.unwrap();
-            let mut order_after_deletion_item_ids = order_after_deletion.items.values().into_iter().map(|i| i.item_id.clone()).collect::<Vec<MenuItemId>>();
+            let mut order_after_deletion_item_ids = order_after_deletion
+                .items
+                .values()
+                .into_iter()
+                .map(|i| i.item_id.clone())
+                .collect::<Vec<MenuItemId>>();
             order_after_deletion_item_ids.sort();
             assert_eq!(TableId(123), order_after_deletion.table_id);
             assert_eq!(vec![MenuItemId(4)], order_after_deletion_item_ids);

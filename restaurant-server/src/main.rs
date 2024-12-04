@@ -1,6 +1,4 @@
-use std::{
-    collections::HashMap, sync::Arc,
-};
+use std::{collections::HashMap, sync::Arc};
 
 use axum::Router;
 use persistence::{memory_persistence::MemoryPersistence, persistence::Persistence};
