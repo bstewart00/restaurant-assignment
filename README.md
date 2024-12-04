@@ -4,9 +4,11 @@
 
 ```
 POST    /v0/orders/:table_id
+- Body: { items: [{ item_id: number, qty: number }] }
 - Create initial table order (1 or more items)
 
 PUT    /v0/orders/:table_id
+- Body: { items: [{ item_id: number, qty: number }] }
 - Modify table order (replaces all items in the order, potentially adding or deleting)
 
 GET     /v0/orders/:table_id
@@ -29,6 +31,7 @@ Assumptions:
     - So, the client would periodically check the status of table/items to see if they are ready.
     - In practice, I think the server would notify clients when items have finished preparing.
 - Table orders represent a transaction for one group of guests at that table. So after all items from the order are finished, the client would DELETE the table from the "active orders".
+- API parameters are valid. Would ideally validate and return 4xx errors
 
 ## Running the application:
 

@@ -18,8 +18,7 @@ pub struct TableOrder {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct TableOrderItem {
-    pub item_id: MenuItemId,
-    pub name: String,
+    pub item_id: MenuItemId, // could make item id distinct from menu item id, but will assume a table order can only contain one of each menu item
     pub quantity: i32,
     pub total_preparation_time_mins: i32,
 }

@@ -12,3 +12,12 @@ pub struct MenuItem {
     pub name: String,
     pub description: String, // details, ingredients etc
 }
+
+// for simplicity, assume all ids are valid rather than pulling from some kind of list
+pub fn get_menu_item(id: &MenuItemId) -> MenuItem {
+    return MenuItem {
+        id: id.clone(),
+        name: format!("menu item {}", &id),
+        description: format!("menu item desc {}", &id)
+    };
+}

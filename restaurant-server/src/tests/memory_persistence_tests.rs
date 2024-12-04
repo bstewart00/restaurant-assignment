@@ -19,9 +19,9 @@ mod tests {
     async fn create_order__no_existing_order__is_created() {
         let table_id = TableId(123);
         let items = vec![
-            TableOrderItem { item_id: MenuItemId(1), name: "item1".to_string(), quantity: 1, total_preparation_time_mins: 10 },
-            TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
-            TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
+            TableOrderItem { item_id: MenuItemId(1), quantity: 1, total_preparation_time_mins: 10 },
+            TableOrderItem { item_id: MenuItemId(2), quantity: 1, total_preparation_time_mins: 11 },
+            TableOrderItem { item_id: MenuItemId(3), quantity: 1, total_preparation_time_mins: 12 },
         ];
         let mut sut = MemoryPersistence::default();
 
@@ -41,9 +41,9 @@ mod tests {
     async fn create_order__table_has_existing_order__is_error() {
         let table_id = TableId(123);
         let items = vec![
-            TableOrderItem { item_id: MenuItemId(1), name: "item1".to_string(), quantity: 1, total_preparation_time_mins: 10 },
-            TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
-            TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
+            TableOrderItem { item_id: MenuItemId(1), quantity: 1, total_preparation_time_mins: 10 },
+            TableOrderItem { item_id: MenuItemId(2), quantity: 1, total_preparation_time_mins: 11 },
+            TableOrderItem { item_id: MenuItemId(3), quantity: 1, total_preparation_time_mins: 12 },
         ];
         let mut data: HashMap<TableId, TableOrder> = HashMap::new();
         data.insert(table_id.clone(), TableOrder { table_id: table_id.clone(), items: HashMap::default() });
@@ -60,9 +60,9 @@ mod tests {
     async fn update_order__no_existing_order__is_error() {
         let table_id = TableId(123);
         let items = vec![
-            TableOrderItem { item_id: MenuItemId(1), name: "item1".to_string(), quantity: 1, total_preparation_time_mins: 10 },
-            TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
-            TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
+            TableOrderItem { item_id: MenuItemId(1), quantity: 1, total_preparation_time_mins: 10 },
+            TableOrderItem { item_id: MenuItemId(2), quantity: 1, total_preparation_time_mins: 11 },
+            TableOrderItem { item_id: MenuItemId(3), quantity: 1, total_preparation_time_mins: 12 },
         ];
         let mut sut = MemoryPersistence::default();
 
@@ -77,9 +77,9 @@ mod tests {
     async fn update_order__existing_order__replaces_items() {
         let table_id = TableId(123);
         let existing_items = vec![
-            TableOrderItem { item_id: MenuItemId(1), name: "item1".to_string(), quantity: 1, total_preparation_time_mins: 10 },
-            TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
-            TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
+            TableOrderItem { item_id: MenuItemId(1), quantity: 1, total_preparation_time_mins: 10 },
+            TableOrderItem { item_id: MenuItemId(2), quantity: 1, total_preparation_time_mins: 11 },
+            TableOrderItem { item_id: MenuItemId(3), quantity: 1, total_preparation_time_mins: 12 },
         ];
         let mut data: HashMap<TableId, TableOrder> = HashMap::new();
         data.insert(table_id.clone(), TableOrder { table_id: table_id.clone(), items: item_slice_to_hashmap(&existing_items) });
@@ -88,10 +88,10 @@ mod tests {
 
         let table_id = TableId(123);
         let new_items = vec![
-            TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
-            TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
-            TableOrderItem { item_id: MenuItemId(4), name: "item4".to_string(), quantity: 1, total_preparation_time_mins: 13 },
-            TableOrderItem { item_id: MenuItemId(5), name: "item5".to_string(), quantity: 1, total_preparation_time_mins: 14 },
+            TableOrderItem { item_id: MenuItemId(2), quantity: 1, total_preparation_time_mins: 11 },
+            TableOrderItem { item_id: MenuItemId(3), quantity: 1, total_preparation_time_mins: 12 },
+            TableOrderItem { item_id: MenuItemId(4), quantity: 1, total_preparation_time_mins: 13 },
+            TableOrderItem { item_id: MenuItemId(5), quantity: 1, total_preparation_time_mins: 14 },
         ];
 
         let result = sut.update_order(&table_id, &new_items).await;
@@ -176,9 +176,9 @@ mod tests {
         let table_id = TableId(123);
         let mut data: HashMap<TableId, TableOrder> = HashMap::new();
         let existing_items = vec![
-            TableOrderItem { item_id: MenuItemId(1), name: "item1".to_string(), quantity: 1, total_preparation_time_mins: 10 },
-            TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
-            TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
+            TableOrderItem { item_id: MenuItemId(1), quantity: 1, total_preparation_time_mins: 10 },
+            TableOrderItem { item_id: MenuItemId(2), quantity: 1, total_preparation_time_mins: 11 },
+            TableOrderItem { item_id: MenuItemId(3), quantity: 1, total_preparation_time_mins: 12 },
         ];
         data.insert(table_id.clone(), TableOrder { table_id: table_id.clone(), items: item_slice_to_hashmap(&existing_items) });
         let mut sut = MemoryPersistence::new(data);
@@ -196,9 +196,9 @@ mod tests {
         let table_id = TableId(123);
         let mut data: HashMap<TableId, TableOrder> = HashMap::new();
         let existing_items = vec![
-            TableOrderItem { item_id: MenuItemId(1), name: "item1".to_string(), quantity: 1, total_preparation_time_mins: 10 },
-            TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
-            TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
+            TableOrderItem { item_id: MenuItemId(1), quantity: 1, total_preparation_time_mins: 10 },
+            TableOrderItem { item_id: MenuItemId(2), quantity: 1, total_preparation_time_mins: 11 },
+            TableOrderItem { item_id: MenuItemId(3), quantity: 1, total_preparation_time_mins: 12 },
         ];
         data.insert(table_id.clone(), TableOrder { table_id: table_id.clone(), items: item_slice_to_hashmap(&existing_items) });
         let mut sut = MemoryPersistence::new(data);
@@ -228,9 +228,9 @@ mod tests {
     async fn general_persistence_behavior() {
         let table_id = TableId(123);
         let items = vec![
-            TableOrderItem { item_id: MenuItemId(1), name: "item1".to_string(), quantity: 1, total_preparation_time_mins: 10 },
-            TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
-            TableOrderItem { item_id: MenuItemId(3), name: "item3".to_string(), quantity: 1, total_preparation_time_mins: 12 },
+            TableOrderItem { item_id: MenuItemId(1), quantity: 1, total_preparation_time_mins: 10 },
+            TableOrderItem { item_id: MenuItemId(2), quantity: 1, total_preparation_time_mins: 11 },
+            TableOrderItem { item_id: MenuItemId(3), quantity: 1, total_preparation_time_mins: 12 },
         ];
         let mut sut = MemoryPersistence::default();
 
@@ -265,8 +265,8 @@ mod tests {
         let updated_order;
         {
             let new_items = vec![
-                TableOrderItem { item_id: MenuItemId(2), name: "item2".to_string(), quantity: 1, total_preparation_time_mins: 11 },
-                TableOrderItem { item_id: MenuItemId(4), name: "item4".to_string(), quantity: 1, total_preparation_time_mins: 14 },
+                TableOrderItem { item_id: MenuItemId(2), quantity: 1, total_preparation_time_mins: 11 },
+                TableOrderItem { item_id: MenuItemId(4), quantity: 1, total_preparation_time_mins: 14 },
             ];
 
             let result = sut.update_order(&table_id, &new_items).await;

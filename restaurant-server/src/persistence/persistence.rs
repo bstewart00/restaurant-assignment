@@ -2,22 +2,22 @@ use crate::models::{
     menu::MenuItemId,
     orders::{TableId, TableOrder, TableOrderItem},
 };
+use axum::http::StatusCode;
 use thiserror::Error;
 
-#[derive(Error, Debug, PartialEq)]
+#[derive(Error, Debug, PartialEq, Clone)]
 pub enum ReadOrderError {
     #[error("Order id {0} not found.")]
     OrderNotFound(String),
 }
 
-#[derive(Error, Debug, PartialEq)]
+#[derive(Error, Debug, PartialEq, Clone)]
 pub enum CreateOrderError {
     #[error("An order already exists for table id {0}.")]
     OrderAlreadyExistsForTable(String),
 }
 
-#[derive(Error, Debug, PartialEq)]
-
+#[derive(Error, Debug, PartialEq, Clone)]
 pub enum ReadOrderItemError {
     #[error("Order id {0} not found.")]
     OrderNotFound(String),

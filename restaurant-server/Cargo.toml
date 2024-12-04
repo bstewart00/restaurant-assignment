@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 axum = { version = "0.7.9", features = ["macros"] }
+rand = "0.8.5"
 serde = { version = "1.0", features = ["derive"] }
 thiserror = "2.0.3"
 tokio = { version = "1.0", features = ["full"] }
