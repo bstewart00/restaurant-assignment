@@ -94,7 +94,7 @@ fn table_staff_thread(thread_id: i32) {
     // 1:[10..19] etc
 
     let table_start_id = thread_id * 10;
-    let table_end_id = table_start_id + 9;
+    let table_end_id = table_start_id + 10;
     println!("{}|thread[{}]: Table staff thread started. handling tables [{}, {}]", current_time(), thread_id, table_start_id, table_end_id);
 
     let client = reqwest::blocking::Client::new();
