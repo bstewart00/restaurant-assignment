@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 
+// IMO it is much better for dev experience for tests to be in separate files than together with implementation
+// For the main reason that when I do a (text) search in my editor for a function call later, I want to be able to filter out test usages to see the actual usages.
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;

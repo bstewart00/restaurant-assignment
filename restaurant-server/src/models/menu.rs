@@ -1,3 +1,5 @@
+use rand::Rng;
+
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, serde::Deserialize)]
 pub struct MenuItemId(pub i32);
 impl std::fmt::Display for MenuItemId {
@@ -16,4 +18,8 @@ pub struct MenuItem {
 // for simplicity, assume all ids are valid rather than pulling from some kind of list
 pub fn get_menu_item(id: &MenuItemId) -> MenuItem {
     return MenuItem { id: id.clone(), name: format!("menu item {}", &id), description: format!("menu item desc {}", &id) };
+}
+
+pub fn get_preparation_time(_item_id: &MenuItemId) -> i32 {
+    return rand::thread_rng().gen_range(10..20);
 }

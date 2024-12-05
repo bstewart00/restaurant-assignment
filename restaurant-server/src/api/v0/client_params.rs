@@ -1,7 +1,5 @@
-use rand::Rng;
-
 use crate::models::{
-    menu::MenuItemId,
+    menu::{get_preparation_time, MenuItemId},
     orders::{TableId, TableOrderItem},
 };
 
@@ -29,8 +27,4 @@ pub fn from_client_item(new_item: &ClientNewItem) -> TableOrderItem {
     let preparation_time = get_preparation_time(&item_id);
 
     return TableOrderItem { item_id: item_id, quantity: new_item.qty, total_preparation_time_mins: preparation_time };
-}
-
-fn get_preparation_time(_item_id: &MenuItemId) -> i32 {
-    return rand::thread_rng().gen_range(10..20);
 }

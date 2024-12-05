@@ -1,18 +1,16 @@
-use std::{collections::HashMap, sync::Arc};
-
-use axum::Router;
-use persistence::{memory_persistence::MemoryPersistence, persistence::Persistence};
-use state::{AppState, SharedAppState};
-use tokio::sync::RwLock;
+use app::create_app;
+use persistence::memory_persistence::MemoryPersistence;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 mod api;
+mod app;
 mod models;
 mod persistence;
 mod state;
 
 #[cfg(test)]
 mod tests {
+    mod app_integration_tests;
     mod memory_persistence_tests;
 }
 
@@ -24,12 +22,7 @@ async fn main() {
         .init();
 
     let persistence: MemoryPersistence = MemoryPersistence::default();
-    let mut app_state = AppState { persistence: persistence };
-    let shared_app_state = Arc::new(RwLock::new(app_state));
-
-    let app = Router::<SharedAppState>::new()
-        .merge(api::v0::routes::create_routes())
-        .with_state(Arc::clone(&shared_app_state));
+    let app = create_app(persistence);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:9000").await.unwrap();
     tracing::debug!("listening on {}", listener.local_addr().unwrap());

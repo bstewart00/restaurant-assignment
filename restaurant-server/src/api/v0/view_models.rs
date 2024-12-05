@@ -6,14 +6,14 @@ use crate::models::{
     orders::{TableOrder, TableOrderItem},
 };
 
-#[derive(serde::Serialize)]
+#[derive(serde::Serialize, serde::Deserialize)]
 
 pub struct TableOrderViewModel {
-    table_id: String,
-    items: Vec<TableOrderItemSummaryViewModel>,
+    pub table_id: String,
+    pub items: Vec<TableOrderItemSummaryViewModel>,
 }
 
-#[derive(serde::Serialize)]
+#[derive(serde::Serialize, serde::Deserialize)]
 
 pub struct TableOrderItemSummaryViewModel {
     pub item_id: String,
@@ -22,7 +22,7 @@ pub struct TableOrderItemSummaryViewModel {
     pub total_preparation_time_mins: i32,
 }
 
-#[derive(serde::Serialize)]
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct TableOrderItemDetailViewModel {
     pub item_id: String,
     pub name: String,
