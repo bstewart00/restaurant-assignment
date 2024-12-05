@@ -4,11 +4,11 @@
 
 ```
 POST    /v0/orders/:table_id
-- Body: { items: [{ item_id: number, qty: number }] }
+- JSON Body: { items: [{ item_id: number, qty: number }] }
 - Create initial table order (1 or more items)
 
 PUT    /v0/orders/:table_id
-- Body: { items: [{ item_id: number, qty: number }] }
+- JSON Body: { items: [{ item_id: number, qty: number }] }
 - Modify table order (replaces all items in the order, potentially adding or deleting)
 
 GET     /v0/orders/:table_id
@@ -34,6 +34,8 @@ Assumptions:
 - API parameters are valid. Would ideally validate and return 4xx errors
 
 ## Running the application:
+
+I developed this on Windows using the docker devcontainer. If you have a rust environment locally you should be able to run it directly.
 
 1. `make toolchain`
 2. `make build`

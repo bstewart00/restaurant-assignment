@@ -1,9 +1,9 @@
 use std::thread;
 use std::time::Duration;
 
+use chrono::{DateTime, Utc};
 use reqwest::header::CONTENT_TYPE;
 use serde_json::json;
-use chrono::{DateTime, Utc};
 use std::time::SystemTime;
 
 const BASE_URL: &'static str = "http://localhost:9000";
@@ -17,64 +17,74 @@ fn current_time() -> String {
 fn create_order(thread_id: i32, table_id: i32, client: &reqwest::blocking::Client) {
     let url = format!("{}/v0/orders/{}", BASE_URL, table_id);
     println!("{}|thread[{}]: POST {}", current_time(), thread_id, url);
-    let resp = client.post(url)
+    let resp = client
+        .post(url)
         .header(CONTENT_TYPE, "application/json")
-        .body(json!({
-            "items": [
-                { "item_id": "1", "qty": 1 },
-                { "item_id": "2", "qty": 1 },
-                { "item_id": "3", "qty": 1 }
-            ]
-        }).to_string())
-        .send().unwrap().text().unwrap();
+        .body(
+            json!({
+                "items": [
+                    { "item_id": "1", "qty": 1 },
+                    { "item_id": "2", "qty": 1 },
+                    { "item_id": "3", "qty": 1 }
+                ]
+            })
+            .to_string(),
+        )
+        .send()
+        .unwrap()
+        .text()
+        .unwrap();
     println!("{}|thread[{}]:     response[{:?}]", current_time(), thread_id, resp);
 }
 
 fn update_order(thread_id: i32, table_id: i32, client: &reqwest::blocking::Client) {
     let url = format!("{}/v0/orders/{}", BASE_URL, table_id);
     println!("{}|thread[{}]: PUT {}", current_time(), thread_id, url);
-    let resp = client.put(url)
+    let resp = client
+        .put(url)
         .header(CONTENT_TYPE, "application/json")
-        .body(json!({
-            "items": [
-                { "item_id": "4", "qty": 1 },
-                { "item_id": "3", "qty": 1 },
-                { "item_id": "5", "qty": 1 }
-            ]
-        }).to_string())
-        .send().unwrap().text().unwrap();
+        .body(
+            json!({
+                "items": [
+                    { "item_id": "4", "qty": 1 },
+                    { "item_id": "3", "qty": 1 },
+                    { "item_id": "5", "qty": 1 }
+                ]
+            })
+            .to_string(),
+        )
+        .send()
+        .unwrap()
+        .text()
+        .unwrap();
     println!("{}|thread[{}]:     response[{:?}]", current_time(), thread_id, resp);
 }
 
 fn get_order_items(thread_id: i32, table_id: i32, client: &reqwest::blocking::Client) {
     let url = format!("{}/v0/orders/{}", BASE_URL, table_id);
     println!("{}|thread[{}]: GET {}", current_time(), thread_id, url);
-    let resp = client.get(url)
-        .send().unwrap().text().unwrap();
+    let resp = client.get(url).send().unwrap().text().unwrap();
     println!("{}|thread[{}]:     response[{:?}]", current_time(), thread_id, resp);
 }
 
 fn get_order_item_details(thread_id: i32, table_id: i32, item_id: i32, client: &reqwest::blocking::Client) {
     let url = format!("{}/v0/orders/{}/items/{}", BASE_URL, table_id, item_id);
     println!("{}|thread[{}]: GET {}", current_time(), thread_id, url);
-    let resp = client.get(url)
-        .send().unwrap().text().unwrap();
+    let resp = client.get(url).send().unwrap().text().unwrap();
     println!("{}|thread[{}]:     response[{:?}]", current_time(), thread_id, resp);
 }
 
 fn delete_order_item(thread_id: i32, table_id: i32, item_id: i32, client: &reqwest::blocking::Client) {
     let url = format!("{}/v0/orders/{}/items/{}", BASE_URL, table_id, item_id);
     println!("{}|thread[{}]: DELETE {}", current_time(), thread_id, url);
-    let resp = client.delete(url)
-        .send().unwrap().text().unwrap();
+    let resp = client.delete(url).send().unwrap().text().unwrap();
     println!("{}|thread[{}]:     response[{:?}]", current_time(), thread_id, resp);
 }
 
 fn delete_order(thread_id: i32, table_id: i32, client: &reqwest::blocking::Client) {
     let url = format!("{}/v0/orders/{}", BASE_URL, table_id);
     println!("{}|thread[{}]: DELETE {}", current_time(), thread_id, url);
-    let resp = client.delete(url)
-        .send().unwrap().text().unwrap();
+    let resp = client.delete(url).send().unwrap().text().unwrap();
     println!("{}|thread[{}]:     response[{:?}]", current_time(), thread_id, resp);
 }
 
@@ -124,9 +134,7 @@ fn main() {
     dump_persistence(&client);
 
     let threads = (0..thread_count - 1)
-        .map(|i| {
-            return thread::spawn(move || { table_staff_thread(i) })
-        })
+        .map(|i| return thread::spawn(move || table_staff_thread(i)))
         .collect::<Vec<_>>();
 
     for thread in threads.into_iter() {

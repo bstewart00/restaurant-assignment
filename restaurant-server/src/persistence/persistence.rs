@@ -25,6 +25,7 @@ pub enum ReadOrderItemError {
 }
 
 pub trait Persistence {
+    // In production this would likely be async, if it were using a DB or redis etc
     async fn create_order(&mut self, table_id: &TableId, items: &[TableOrderItem]) -> Result<&TableOrder, CreateOrderError>;
 
     async fn find_order(&self, table_id: &TableId) -> Result<&TableOrder, ReadOrderError>;
