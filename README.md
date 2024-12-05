@@ -25,7 +25,7 @@ DELETE  /v0/orders/:table_id
 ```
 
 Assumptions:
-- Items are not automatically removed by the server e.g. after the preparation time. Clients will explicitly make a delete request.
+- Items are not automatically removed by the server e.g. after the preparation time. Clients will explicitly make a delete item request.
     - This is how I interpreted the last requirement:
     > in other words, the time does not have to be counted down in real time, only upon item creation and then removed with the item upon item deletion
     - So, the client would periodically check the status of table/items to see if they are ready.

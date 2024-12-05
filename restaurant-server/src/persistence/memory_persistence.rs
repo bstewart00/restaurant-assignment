@@ -7,7 +7,7 @@ use crate::models::{
 
 use super::persistence::{CreateOrderError, Persistence, ReadOrderError, ReadOrderItemError};
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct MemoryPersistence {
     data: HashMap<TableId, TableOrder>,
 }

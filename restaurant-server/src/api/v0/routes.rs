@@ -23,10 +23,10 @@ pub fn create_routes() -> Router<SharedAppState> {
         .route("/v0/orders/:table_id", put(update_order_handler))
         .route("/v0/orders/:table_id", delete(delete_order_handler))
         .route("/v0/orders/:table_id/items/:item_id", get(read_order_item_handler))
-        .route("/v0/orders/:table_id/items/:item_id", delete(delete_order_item_handler));
+        .route("/v0/orders/:table_id/items/:item_id", delete(delete_order_item_handler))
+        .route("/debug/dump_persistence", get(debug_dump_persistence_handler));
 }
 
-#[axum::debug_handler]
 async fn create_order_handler(State(state): State<SharedAppState>, Path(client_table_id): Path<String>, Json(payload): Json<CreateOrUpdateOrderParams>) -> Response<axum::body::Body> {
     let app_state = &mut state.write().await;
     let persistence = &mut app_state.persistence;
@@ -92,6 +92,13 @@ async fn delete_order_item_handler(State(state): State<SharedAppState>, Path((cl
     let order = persistence.delete_order_item(&table_id, &item_id).await;
 
     return order.map_or_else(|err| create_error_response(err), |o| (StatusCode::OK, axum::Json(to_order_view_model(o))).into_response());
+}
+
+async fn debug_dump_persistence_handler(State(state): State<SharedAppState>) -> Response<axum::body::Body> {
+    let app_state = &mut state.write().await;
+    let persistence = &mut app_state.persistence;
+
+    return (StatusCode::OK, format!("{:?}", persistence)).into_response();
 }
 
 fn create_error_response<E>(err: E) -> Response<axum::body::Body>

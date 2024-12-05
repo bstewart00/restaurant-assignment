@@ -2,7 +2,6 @@ use crate::models::{
     menu::MenuItemId,
     orders::{TableId, TableOrder, TableOrderItem},
 };
-use axum::http::StatusCode;
 use thiserror::Error;
 
 #[derive(Error, Debug, PartialEq, Clone)]

@@ -5,7 +5,7 @@ use tokio::sync::RwLock;
 
 use crate::{
     api,
-    persistence::{self, memory_persistence::MemoryPersistence},
+    persistence::memory_persistence::MemoryPersistence,
     state::{AppState, SharedAppState},
 };
 
